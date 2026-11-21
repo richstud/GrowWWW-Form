@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GrowWWW: Tell us your requirement</title>
+<meta name="description" content="Algo trading, software development, automation and digital marketing by GrowWWW (since 2015). Tell us your requirement, get free bonuses and stand a chance to win.">
+<meta name="theme-color" content="#0a0a0b">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/fav-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:title" content="GrowWWW: Stand a chance to win your project FREE">
+<meta property="og:description" content="Tell us your requirement in 60 seconds. Free bonuses for every client.">
+<meta property="og:image" content="assets/logo-badge.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0b;--panel:#131315;--panel2:#1a1a1d;--line:#2a2a2f;
+  --gold:#d9b45a;--gold2:#f3dc95;--text:#f5f2ea;--muted:#a7a299;--ok:#3ecf8e;--err:#ff7a7a;--wa:#25D366;
+}
+*{box-sizing:border-box}
+html,body{margin:0;color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;background:
+  radial-gradient(1100px 600px at 85% -10%,rgba(217,180,90,.16),transparent 60%),
+  radial-gradient(800px 500px at -10% 30%,rgba(217,180,90,.07),transparent 60%),var(--bg)}
+.wrap{max-width:1140px;margin:0 auto;padding:22px 20px 60px}
+a{color:var(--gold2)}
+
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:34px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
+.mark{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--gold);display:grid;place-items:center;
+  font-family:Fraunces,serif;font-weight:700;color:var(--gold);background:radial-gradient(circle at 30% 30%,#1d1a12,#0a0a0b)}
+.brand .nm{font-family:Fraunces,serif;font-size:22px;font-weight:700;letter-spacing:.2px;line-height:1}
+.brand .nm b{color:var(--gold)}
+.brand .sc{font-size:10.5px;letter-spacing:2.4px;color:var(--muted);text-transform:uppercase;margin-top:4px}
+.switch{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px}
+.switch button{border:0;background:transparent;color:var(--muted);font:600 14px Inter,sans-serif;padding:10px 18px;border-radius:999px;cursor:pointer;transition:.2s}
+.switch button.on{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#141107}
+
+/* layout */
+.grid{display:grid;grid-template-columns:1fr 1.12fr;gap:34px;align-items:start}
+@media(max-width:920px){.grid{grid-template-columns:1fr;gap:22px}}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);
+  border:1px solid rgba(217,180,90,.35);border-radius:999px;padding:6px 12px;background:rgba(217,180,90,.06)}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(217,180,90,.18)}
+h1{font-family:Fraunces,serif;font-weight:700;font-size:clamp(30px,4.2vw,46px);line-height:1.08;margin:16px 0 14px;letter-spacing:-.5px}
+h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--muted);font-size:16.5px;line-height:1.6;margin:0 0 24px;max-width:520px}
+
+.offer{position:relative;border:1px solid rgba(217,180,90,.45);border-radius:18px;padding:22px 22px 18px;
+  background:linear-gradient(160deg,rgba(217,180,90,.13),rgba(217,180,90,.02) 55%),var(--panel);overflow:hidden}
+.offer:before{content:"";position:absolute;inset:-40% -30% auto auto;width:240px;height:240px;border-radius:50%;background:radial-gradient(rgba(243,220,149,.22),transparent 70%)}
+.offer .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;background:var(--gold);color:#141107;padding:5px 10px;border-radius:6px}
+.offer h3{font-family:Fraunces,serif;font-size:22px;margin:12px 0 12px}
+.offer ul{list-style:none;padding:0;margin:0;display:grid;gap:11px}
+.offer li{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;line-height:1.45}
+.offer li .ic{flex:0 0 30px;height:30px;border-radius:9px;display:grid;place-items:center;background:rgba(217,180,90,.14);font-size:15px}
+.offer li b{color:var(--text)}
+.offer li span{color:var(--muted)}
+.offer .dl{margin-top:14px;font-size:12.5px;color:var(--gold2)}
+
+.trust{display:flex;flex-wrap:wrap;gap:8px 18px;margin:20px 0 0;padding:0;list-style:none;color:var(--muted);font-size:13px}
+.trust li:before{content:"✓";color:var(--gold);margin-right:7px;font-weight:700}
+.disc{margin-top:18px;font-size:12px;line-height:1.55;color:#7f7b73;border-left:2px solid var(--line);padding-left:12px}
+
+/* form card */
+.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+@media(max-width:520px){.card{padding:20px 16px}}
+.prog{display:flex;gap:8px;margin-bottom:8px}
+.prog div{flex:1;height:5px;border-radius:5px;background:var(--line);overflow:hidden}
+.prog div i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .35s}
+.prog div.done i{width:100%}
+.stepinfo{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:20px}
+.stepinfo b{color:var(--gold2);font-weight:600}
+.step{display:none;border:0;margin:0;padding:0;min-width:0}
+.step.on{display:block;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.step h2{font-family:Fraunces,serif;font-size:23px;margin:0 0 4px}
+.step .hint{color:var(--muted);font-size:14px;margin:0 0 20px}
+
+.f{margin-bottom:18px}
+.f>label,.f>.lb{display:block;font-size:13.5px;font-weight:600;margin-bottom:8px}
+.f .opt{color:var(--muted);font-weight:400}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.row2{grid-template-columns:1fr}}
+input[type=text],input[type=email],input[type=tel],select,textarea{width:100%;background:#0e0e10;border:1px solid var(--line);color:var(--text);
+  border-radius:12px;padding:13px 14px;font:15px Inter,sans-serif;outline:none;transition:border .2s,box-shadow .2s}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 55%,calc(100% - 14px) 55%;background-size:6px 6px;background-repeat:no-repeat;padding-right:38px}
+select option{background:#0e0e10}
+textarea{min-height:110px;resize:vertical;line-height:1.5}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(217,180,90,.18)}
+::placeholder{color:#64615b}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative;cursor:pointer;user-select:none;border:1px solid var(--line);background:#0e0e10;color:#d8d4cb;
+  border-radius:999px;padding:9px 14px;font-size:13.5px;transition:.15s}
+.chip:hover{border-color:#4a4636}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip.on{border-color:var(--gold);background:rgba(217,180,90,.14);color:var(--gold2)}
+.chip.on:before{content:"✓ ";font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+@media(max-width:520px){.cards{grid-template-columns:1fr 1fr}}
+.cards .chip{border-radius:12px;padding:13px 10px;text-align:center;font-weight:600}
+.cards .chip.on:before{content:""}
+
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--muted);line-height:1.5;cursor:pointer}
+.consent input{margin-top:3px;accent-color:var(--gold);width:17px;height:17px;flex:0 0 auto}
+.err .chips .chip,.err input,.err select,.err textarea{border-color:var(--err)}
+.err .consent{color:var(--err)}
+.emsg{display:none;color:var(--err);font-size:12.5px;margin-top:6px}
+.err .emsg{display:block}
+.counter{font-size:12px;color:var(--muted);text-align:right;margin-top:5px}
+
+.nav{display:flex;gap:10px;margin-top:24px}
+.btn{border:0;cursor:pointer;font:700 15px Inter,sans-serif;border-radius:13px;padding:15px 20px;transition:.2s}
+.btn.pri{flex:1;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#141107;box-shadow:0 10px 28px rgba(217,180,90,.25)}
+.btn.pri:hover{transform:translateY(-1px);box-shadow:0 14px 34px rgba(217,180,90,.35)}
+.btn.pri:disabled{opacity:.6;cursor:wait;transform:none}
+.btn.sec{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.btn.sec:hover{color:var(--text);border-color:#444}
+.safe{text-align:center;color:#7f7b73;font-size:12px;margin-top:12px}
+.formerr{display:none;margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(255,122,122,.1);color:var(--err);font-size:13px}
+
+/* thank you */
+.thanks{display:none;text-align:center;animation:fade .4s ease}
+.thanks .big{font-size:52px;line-height:1}
+.thanks h2{font-family:Fraunces,serif;font-size:30px;margin:12px 0 6px}
+.thanks .lid{display:inline-block;margin:6px 0 18px;padding:6px 12px;border-radius:8px;border:1px dashed var(--gold);color:var(--gold2);font-size:13px;letter-spacing:1px}
+.unlock{text-align:left;border:1px solid rgba(62,207,142,.35);background:rgba(62,207,142,.06);border-radius:14px;padding:16px 18px;margin:0 0 18px}
+.unlock b{display:block;margin-bottom:8px;color:var(--ok);font-size:13px;letter-spacing:1px;text-transform:uppercase}
+.unlock div{font-size:14px;margin:6px 0}
+.next{text-align:left;display:grid;gap:12px;margin:0 0 22px}
+.next div{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--muted);line-height:1.45}
+.next div i{flex:0 0 26px;height:26px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;font-size:13px;background:var(--gold);color:#141107}
+.next div b{color:var(--text)}
+.wa{display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;background:var(--wa);color:#fff;font-weight:700;font-size:16px;
+  padding:16px;border-radius:14px;box-shadow:0 12px 30px rgba(37,211,102,.28)}
+.wa:hover{filter:brightness(1.06)}
+.demo{display:none;margin-top:14px;font-size:12px;color:#c9a64c}
+footer{margin-top:44px;text-align:center;color:#6d6a63;font-size:12.5px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+/* ---- additions for the single multi-service form ---- */
+.brand img{width:46px;height:46px;border-radius:10px;display:block}
+.proof{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
+.proof span{font-size:13px;color:#d8d4cb;border:1px solid var(--line);background:rgba(255,255,255,.02);border-radius:999px;padding:7px 12px}
+.offer .tag{background:linear-gradient(135deg,var(--gold2),var(--gold));font-size:12px;padding:6px 11px}
+.draw{display:flex;gap:14px;align-items:center;margin:6px 0 16px;padding:14px;border-radius:14px;background:rgba(0,0,0,.35);border:1px dashed rgba(243,220,149,.5)}
+.draw .tro{font-size:34px;line-height:1;filter:drop-shadow(0 4px 12px rgba(217,180,90,.45))}
+.draw b{display:block;font-family:Fraunces,serif;font-size:18px;color:var(--gold2);line-height:1.25}
+.draw small{display:block;color:var(--muted);font-size:12.5px;margin-top:3px}
+.gsub{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin:2px 0 10px}
+.count{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}
+.count .lbl{font-size:12.5px;color:var(--gold2);margin-right:4px}
+.count .u{min-width:54px;text-align:center;background:#0e0e10;border:1px solid var(--line);border-radius:10px;padding:7px 6px}
+.count .u b{display:block;font-family:Fraunces,serif;font-size:20px;color:var(--text)}
+.count .u i{font-style:normal;font-size:10.5px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.svcpick{margin-bottom:22px;padding:16px;border-radius:16px;background:rgba(217,180,90,.07);border:1px solid rgba(217,180,90,.35)}
+.svcpick label{color:var(--gold2)}
+.svcpick select{font-weight:600;font-size:16px;border-color:rgba(217,180,90,.5)}
+.why{margin:22px 0 0;display:grid;gap:10px}
+.why div{display:flex;gap:10px;font-size:14px;color:var(--muted);line-height:1.5}
+.why div b{color:var(--text)}
+.ticker{margin:0 0 18px;font-size:13px;color:var(--gold2);display:flex;gap:8px;align-items:center}
+.ticker i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(62,207,142,.6);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(62,207,142,.55)}70%{box-shadow:0 0 0 10px rgba(62,207,142,0)}100%{box-shadow:0 0 0 0 rgba(62,207,142,0)}}
+.hide{display:none!important}
+
+.grid{grid-template-areas:"hero card" "more card"}
+.hero{grid-area:hero}.more{grid-area:more}.card{grid-area:card;grid-row:1 / span 2;align-self:start}
+@media(max-width:920px){.grid{grid-template-areas:"hero" "card" "more"}.card{grid-row:auto}.hero .sub{margin-bottom:16px}}
+@media(max-width:520px){.count .u{min-width:44px;padding:6px 4px}.count .u b{font-size:17px}.count .lbl{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <a class="brand" href="https://www.growwww.in" target="_blank" rel="noopener">
+      <img src="assets/logo-badge.png" alt="GrowWWW logo" width="46" height="46">
+      <div><div class="nm">Grow<b>WWW</b></div><div class="sc">Since 2015 · Grow your business on "WWW"</div></div>
+    </a>
+  </header>
+
+  <div class="grid">
+    <!-- LEFT: pitch -->
+    <section class="hero">
+      <span class="eyebrow"><i></i><span id="eyebrow"></span></span>
+      <h1 id="h1"></h1>
+      <p class="sub" id="sub"></p>
+      <div class="proof">
+        <span>⚡ Takes 60 seconds</span><span>🔒 No obligation, no spam</span><span>💬 Personal reply within hours</span>
+      </div>
+    </section>
+
+    <!-- RIGHT: form -->
+    <section class="card" id="card">
+      <form id="lead" novalidate>
+        <div class="ticker"><i></i><span id="tickerText"></span></div>
+        <div class="prog"><div><i></i></div><div><i></i></div><div><i></i></div></div>
+        <div class="stepinfo"><span>Step <b class="sn">1</b> of 3</span><span class="sl"></span></div>
+        <div class="hp"><label>Leave empty<input type="text" name="hp" tabindex="-1" autocomplete="off"></label></div>
+
+        <fieldset class="step on" data-label="Your requirement">
+          <div class="f svcpick">
+            <label for="svc">What do you need help with?</label>
+            <select id="svc" name="formType" required>
+              <option value="algo">📈 Algo Trading</option>
+              <option value="development">💻 Software Development</option>
+              <option value="automation">⚙️ Software Automation</option>
+              <option value="marketing">🚀 Digital Marketing</option>
+            </select>
+          </div>
+          <h2 id="s1title"></h2>
+          <p class="hint" id="s1hint"></p>
+          <div id="s1fields"></div>
+          <div class="nav"><button class="btn pri" type="button" data-nav="next">Continue →</button></div>
+        </fieldset>
+
+        <fieldset class="step" data-label="Your pain">
+          <h2 id="s2title"></h2>
+          <p class="hint" id="s2hint"></p>
+          <div id="s2fields"></div>
+          <div class="nav"><button class="btn sec" type="button" data-nav="back">← Back</button><button class="btn pri" type="button" data-nav="next">Almost there →</button></div>
+        </fieldset>
+
+        <fieldset class="step" data-label="Budget & contact">
+          <h2>Budget &amp; how to reach you</h2>
+          <p class="hint">So we propose what fits your budget, not an overpriced package.</p>
+          <div id="s3fields"></div>
+
+          <div class="f" data-group="timeline" data-req>
+            <div class="lb">When do you want to start?</div>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="timeline" value="ASAP – this week" data-score="25">ASAP (this week)</label>
+              <label class="chip"><input type="radio" name="timeline" value="Within 30 days" data-score="20">Within 30 days</label>
+              <label class="chip"><input type="radio" name="timeline" value="1 – 3 months" data-score="10">1 – 3 months</label>
+              <label class="chip"><input type="radio" name="timeline" value="Just exploring" data-score="2">Just exploring</label>
+            </div>
+            <div class="emsg">Please pick one.</div>
+          </div>
+
+          <div class="row2">
+            <div class="f"><label for="name">Full name</label><input id="name" type="text" name="name" required autocomplete="name" placeholder="Your name"><div class="emsg">Please enter your name.</div></div>
+            <div class="f"><label for="phone">WhatsApp number</label><input id="phone" type="tel" name="phone" required data-phone autocomplete="tel" placeholder="+91 98xxx xxxxx"><div class="emsg">Enter a valid number (add country code if outside India).</div></div>
+          </div>
+          <div class="row2">
+            <div class="f"><label for="email">Email <span class="opt" id="emailOpt">(optional)</span></label><input id="email" type="email" name="email" autocomplete="email" placeholder="you@company.com"><div class="emsg">Please enter a valid email.</div></div>
+            <div class="f"><label for="city">City / Country</label><input id="city" type="text" name="city" required placeholder="e.g. Mumbai"><div class="emsg">Please enter your city.</div></div>
+          </div>
+          <div class="row2">
+            <div class="f" id="desigWrap"><label for="designation">Designation <span class="opt">(optional)</span></label><input id="designation" type="text" name="designation" autocomplete="organization-title" placeholder="e.g. Founder, Marketing Head"></div>
+            <div class="f">
+              <label for="callTime">Best time to call</label>
+              <select id="callTime" name="callTime">
+                <option>Anytime</option><option>Morning (10 AM – 1 PM)</option><option>Afternoon (1 – 5 PM)</option>
+                <option>After market hours (post 3:30 PM)</option><option>Evening (5 – 8 PM)</option><option>Weekends</option>
+              </select>
+            </div>
+          </div>
+          <div class="f" data-group="consent" data-req>
+            <label class="consent"><input type="checkbox" name="consent" value="Yes">I agree to be contacted by GrowWWW on WhatsApp, phone or email about my requirement.</label>
+          </div>
+
+          <div class="nav"><button class="btn sec" type="button" data-nav="back">←</button><button class="btn pri" type="submit" id="submitBtn">🏆 Submit &amp; enter the draw</button></div>
+          <div class="formerr"></div>
+          <div class="safe">🔒 Your details stay private. We never share or sell your data.</div>
+        </fieldset>
+      </form>
+
+      <!-- THANK YOU -->
+      <div class="thanks" id="thanks">
+        <div class="big">🏆</div>
+        <h2 id="tyTitle"></h2>
+        <p class="sub" style="margin:0 auto 6px" id="tySub"></p>
+        <div class="lid" id="tyId"></div>
+        <div class="unlock"><b>✅ Unlocked for you</b><div id="tyOffers"></div></div>
+        <div class="next" id="tyNext"></div>
+        <a class="wa" id="tyWa" href="#" target="_blank" rel="noopener">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M20.5 3.5A11.8 11.8 0 0 0 1.9 17.7L.3 23.7l6.2-1.6a11.8 11.8 0 0 0 5.6 1.4h.1A11.8 11.8 0 0 0 20.5 3.5zM12.2 21.4a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4a9.8 9.8 0 1 1 8.3 4.6zm5.4-7.3c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1l-.9 1.2c-.2.2-.3.2-.6.1a8 8 0 0 1-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.5 13.5 0 0 0 5.2 4.6c1.9.8 2.7.9 3.7.7.6-.1 1.8-.7 2-1.5.3-.7.3-1.3.2-1.5l-.6-.4z"/></svg>
+          Chat with us on WhatsApp now
+        </a>
+        <p class="safe"><a href="https://www.growwww.in" target="_blank" rel="noopener">Visit growwww.in</a> · <a href="https://instagram.com/growwwwonline" target="_blank" rel="noopener">@growwwwonline</a></p>
+        <div class="demo" id="demoNote">Preview mode: nothing was saved. Open the live Netlify link to send real leads.</div>
+      </div>
+    </section>
+    <!-- LEFT (below): offer -->
+    <section class="more">
+
+      <div class="offer">
+        <span class="tag">🏆 Stand a chance to WIN</span>
+        <div class="draw">
+          <div class="tro">🏆</div>
+          <div><b id="drawPrize"></b><small id="drawNote"></small></div>
+        </div>
+        <div class="gsub">Plus, Offer includes</div>
+        <ul id="offerList"></ul>
+        <div class="count" id="count"></div>
+      </div>
+
+      <div class="why" id="why"></div>
+
+      <ul class="trust">
+        <li>Since 2015</li><li>Offices in Mumbai, Navi Mumbai &amp; Lucknow</li><li>GST-registered business</li><li>Clients across India &amp; the US</li>
+      </ul>
+      <p class="disc" id="disc"></p>
+    </section>
+
+  </div>
+
+  <footer>© GrowWWW · Mumbai · Navi Mumbai · Lucknow · <a href="mailto:anshu@growwww.in">anshu@growwww.in</a></footer>
+</div>
+
+<script>
+/* ================== EDIT THESE ================== */
+var CONFIG = {
+  WHATSAPP_NUMBER: '918454075281',               // your business WhatsApp: country code + number, no "+"
+  OFFER_DEADLINE: '2026-12-31T23:59:59+05:30',   // countdown + draw closes at this time (IST)
+  DRAW_PRIZE: 'Win your first project 100% FREE',
+  DRAW_NOTE: '1 lucky winner every month from all complete entries. Winner announced on @growwwwonline. T&C apply.',
+  ENDPOINT: 'https://aryvikihjbpedoytwkxc.supabase.co/functions/v1/submit-growth-lead',
+  SUPABASE_KEY: 'sb_publishable_BoBmySCMw0yfBN9AHb_UtQ_npRMAZwV'   // public key, safe in the browser
+};
+/* ================================================ */
+var LOADED_AT = Date.now();
+
+var INDUSTRIES = ['Retail / D2C / E-commerce', 'Food, sweets & restaurants', 'Healthcare / Clinic / Doctor', 'Fitness / Gym',
+  'Education / Coaching', 'Real estate / Construction', 'Manufacturing / Trading', 'Finance / CA / Legal', 'IT / SaaS / Startup',
+  'Logistics / Travel', 'Hospitality / Events', 'Other'];
+var SIZES = ['Just me', '2 – 10', '11 – 50', '51 – 200', '200+'];
+var DECISION = { k: 'decisionMaker', label: 'Your role in the decision', type: 'radio', req: true, opts: ['Yes, I decide', "I'm part of the decision", 'Researching for someone'] };
+var COMPANY = { k: 'company', label: 'Company / brand name', type: 'text', req: true, ph: 'e.g. Sharma Sweets', half: true };
+var INDUSTRY = { k: 'industry', label: 'Industry', type: 'select', req: true, opts: INDUSTRIES, half: true };
+
+/* Each service: copy + fields. Field types: radio | check | select | text | textarea | budget */
+var SERVICES = {
+  algo: {
+    eyebrow: 'Algo Trading Automation',
+    h1: 'Turn your trading rules into a bot that <em>never sleeps, never panics.</em>',
+    sub: 'Still missing entries, breaking your own stop-loss, or glued to the screen all day? Tell us how you trade. We\'ll show you exactly what can be automated, tested on past data before a single rupee goes live.',
+    offers: [['🛡️', '1-Year FREE AMC', 'Bug fixes, broker API updates & server monitoring'], ['📊', 'FREE backtest report', 'See how your strategy did on historical data'],
+      ['🧪', '30-day paper-trading run', 'Watch the bot trade with zero risk first'], ['☁️', 'FREE cloud server setup', 'Runs 24×7 even when your laptop is off']],
+    why: [['🧠', 'No emotions.', 'The bot follows your rules exactly, every single trade.'], ['⚡', 'Milliseconds, not minutes.', 'Entries and exits fire the moment conditions hit.'], ['🛡️', 'Risk on autopilot.', 'Stop-loss, targets and daily loss limits never get skipped.']],
+    disc: 'GrowWWW builds trading technology and automation only. We do not give investment advice, tips or guaranteed returns. Trading in securities involves risk of loss. Bots are built on your broker\'s official API and current exchange rules.',
+    s1: { title: 'Tell us how you trade', hint: '30 seconds. No jargon needed, just pick what fits.', fields: [
+      { k: 'traderType', label: 'You are a…', type: 'radio', req: true, opts: ['Individual trader', 'Full-time trader', 'HNI / Family office', 'Prop desk / Firm', 'Advisor / Educator'] },
+      { k: 'markets', label: 'Markets you trade', type: 'check', req: true, opts: ['Index F&O (Nifty / BankNifty)', 'Stock F&O', 'Equity cash', 'Currency (USD-INR)', 'Commodity (MCX)', 'Crypto (BTC / ETH)', 'US markets'] },
+      { k: 'experience', label: 'Trading experience', type: 'select', req: true, half: true, opts: ['Less than 1 year', '1–3 years', '3–5 years', '5+ years'] },
+      { k: 'broker', label: 'Your broker', type: 'select', req: true, half: true, opts: ['Zerodha (Kite)', 'Upstox', 'Angel One', 'Dhan', 'Fyers', 'ICICI Direct', 'Kotak Neo', '5paisa', 'Interactive Brokers', 'Crypto exchange (Delta / Binance etc.)', 'Other / Not decided'] },
+      { k: 'capital', label: 'Trading capital you\'d run on the bot', type: 'select', req: true, opts: ['Under ₹2 Lakh', '₹2 – 10 Lakh', '₹10 – 50 Lakh', '₹50 Lakh – 1 Crore', '₹1 Crore+', 'Prefer not to say'] }] },
+    s2: { title: 'What\'s hurting right now?', hint: 'Be honest. This is what we\'ll fix first.', fields: [
+      { k: 'painPoints', label: 'Pick everything that sounds like you', type: 'check', req: true, opts: ['Emotions / FOMO break my rules', 'Can\'t watch the screen all day', 'Miss entries & exits', 'Slow manual execution / slippage', 'Stop-loss not followed', 'No proper backtesting', 'Works on paper, fails live', 'Broker API / tech issues', 'Too many accounts / trades to manage'] },
+      { k: 'strategyStatus', label: 'Where is your strategy today?', type: 'radio', req: true, opts: ['Rules are written & ready', 'On TradingView / Amibroker / Excel', 'I trade manually, rules in my head', 'Need help structuring my idea'] },
+      { k: 'wants', label: 'What would you like built?', type: 'check', opts: ['Fully automated bot', 'Semi-auto (alerts + 1-click)', 'TradingView → broker bridge', 'Backtesting engine', 'Options strategy / hedging tool', 'Live P&L & risk dashboard', 'Telegram / WhatsApp alerts', 'Multi-account / copy trading'] },
+      { k: 'painText', label: 'In your own words: what\'s costing you money or peace of mind?', type: 'textarea', req: true, ph: 'e.g. My Nifty option-selling setup works, but I exit too late when it moves against me and give back a week\'s profit in one day…' }] },
+    s3: [{ k: 'budget', label: 'Project budget', type: 'budget', req: true, opts: [['Under ₹25,000', 'Under ₹25k', 5], ['₹25,000 – ₹50,000', '₹25k – 50k', 15], ['₹50,000 – ₹1 Lakh', '₹50k – 1L', 25], ['₹1 – 3 Lakh', '₹1L – 3L', 35], ['₹3 Lakh+', '₹3L+', 40], ['Need guidance on cost', 'Guide me', 10]] }],
+    next: [['A WhatsApp from our team', 'within a few working hours, to understand your setup.'], ['Free 20-min strategy call:', 'we map your rules to logic and flag gaps.'], ['Fixed-price proposal', 'with your free AMC, backtest & paper-trading run included.']],
+    company: false
+  },
+  development: {
+    eyebrow: 'Software & App Development',
+    h1: 'Your idea, built into software <em>people actually love to use.</em>',
+    sub: 'Websites that don\'t sell, apps stuck in "someday", agencies that vanish after delivery? Tell us what you want to build. You\'ll get a clear plan, a fixed price, and a team that stays with you after launch.',
+    offers: [['🛡️', '1-Year FREE AMC', 'Bug fixes, security updates & backups after launch'], ['🎨', 'FREE design mockup', 'See your home screen / homepage before you commit'],
+      ['🗺️', 'FREE project roadmap', 'Features, timeline & fixed quote, in writing'], ['🚀', 'FREE deployment & SSL', 'We launch it live on your domain']],
+    why: [['💰', 'Fixed price.', 'No surprise bills halfway through the project.'], ['📱', 'Built for mobile first.', 'Most of your users are on their phones.'], ['🤝', 'We stay after launch.', '1 year of free maintenance, not a disappearing act.']],
+    disc: '',
+    s1: { title: 'What do you want to build?', hint: '30 seconds. Rough ideas are perfectly fine.', fields: [
+      COMPANY, INDUSTRY,
+      { k: 'projectType', label: 'Type of project', type: 'radio', req: true, opts: ['Website / Landing page', 'E-commerce store', 'Android / iOS app', 'Web app / SaaS', 'CRM / ERP / Billing', 'Custom software', 'AI chatbot / AI agent'] },
+      { k: 'stage', label: 'Where are you today?', type: 'radio', req: true, opts: ['Just an idea', 'Have designs / references', 'Existing software to improve', 'Rebuilding from scratch'] }] },
+    s2: { title: 'What\'s the problem it should solve?', hint: 'Pick what matters. We\'ll scope the rest with you.', fields: [
+      { k: 'features', label: 'Features you need', type: 'check', req: true, opts: ['Login / user accounts', 'Online payments', 'Admin dashboard', 'Booking / appointments', 'Product catalogue', 'Chat / notifications', 'WhatsApp integration', 'Reports & analytics', 'AI features', 'Integration with other tools'] },
+      { k: 'challenges', label: 'What\'s frustrating you now?', type: 'check', opts: ['Losing customers to competitors online', 'Current site / app is slow or outdated', 'Previous developer left mid-way', 'Too much manual work', 'Can\'t track customers or orders', 'Customers ask for an app'] },
+      { k: 'reference', label: 'Any app or website you like? (optional)', type: 'text', ph: 'e.g. like Swiggy\'s ordering flow, or apple.com style' },
+      { k: 'painText', label: 'In your own words: what should this software do for your business?', type: 'textarea', req: true, ph: 'e.g. We take sweet orders on WhatsApp and phone and lose track during festivals. We want customers to order and pay online and our staff to see all orders in one place…' }] },
+    s3: [{ k: 'budget', label: 'Project budget', type: 'budget', req: true, opts: [['Under ₹25,000', 'Under ₹25k', 5], ['₹25,000 – ₹75,000', '₹25k – 75k', 15], ['₹75,000 – ₹2 Lakh', '₹75k – 2L', 25], ['₹2 – 5 Lakh', '₹2L – 5L', 35], ['₹5 Lakh+', '₹5L+', 40], ['Need a recommendation', 'Recommend', 10]] }, DECISION],
+    next: [['A WhatsApp from our team', 'within a few working hours.'], ['Free 20-min discovery call:', 'we turn your idea into a feature list.'], ['Design mockup + fixed quote', 'with your 1-year free AMC included.']],
+    company: true
+  },
+  automation: {
+    eyebrow: 'Business & Software Automation',
+    h1: 'Stop doing by hand what <em>software can do while you sleep.</em>',
+    sub: 'Copy-pasting into Excel, chasing payments, replying to the same WhatsApp questions 50 times a day? Tell us which tasks eat your team\'s time. We\'ll show you how many hours a week you can get back.',
+    offers: [['🛡️', '1-Year FREE AMC', 'Monitoring, fixes & small changes included'], ['🔍', 'FREE automation audit', 'We map exactly where your team loses hours'],
+      ['💬', 'FREE WhatsApp lead alerts', 'Every new enquiry lands on your phone instantly'], ['🎓', 'FREE team training', 'Your staff learns the new system with us']],
+    why: [['⏱️', 'Hours back every week.', 'Repetitive tasks run on their own, 24×7.'], ['✅', 'Zero copy-paste errors.', 'Data flows between your tools automatically.'], ['📈', 'Grow without hiring.', 'Handle 3× the work with the same team.']],
+    disc: '',
+    s1: { title: 'Tell us about your business', hint: '30 seconds. Helps us come prepared with real ideas.', fields: [
+      COMPANY, INDUSTRY,
+      { k: 'size', label: 'Team size', type: 'radio', req: true, opts: SIZES },
+      { k: 'tools', label: 'Tools you use today', type: 'check', req: true, opts: ['Excel / Google Sheets', 'Tally / Busy', 'Zoho', 'WhatsApp Business', 'Shopify / WooCommerce', 'Gmail / Outlook', 'A CRM', 'Paper / registers', 'Custom software'] }] },
+    s2: { title: 'Which work is eating your time?', hint: 'Pick everything your team does by hand today.', fields: [
+      { k: 'processes', label: 'Tasks to automate', type: 'check', req: true, opts: ['Lead capture & follow-up', 'WhatsApp replies & reminders', 'Invoices, billing & payment reminders', 'Reports & MIS from Excel', 'Data entry between tools', 'Inventory & orders', 'HR, attendance & payroll', 'Emails & quotations', 'Customer support / FAQs'] },
+      { k: 'hoursLost', label: 'Hours your team spends on this every week', type: 'select', req: true, opts: ['Less than 5 hours', '5 – 15 hours', '15 – 40 hours', '40+ hours', 'Not sure'] },
+      { k: 'painText', label: 'In your own words: which task frustrates you the most?', type: 'textarea', req: true, ph: 'e.g. Every evening my staff spends 2 hours copying orders from WhatsApp into Excel and then making invoices in Tally…' }] },
+    s3: [{ k: 'budget', label: 'Project budget', type: 'budget', req: true, opts: [['Under ₹25,000', 'Under ₹25k', 5], ['₹25,000 – ₹75,000', '₹25k – 75k', 15], ['₹75,000 – ₹2 Lakh', '₹75k – 2L', 25], ['₹2 – 5 Lakh', '₹2L – 5L', 35], ['₹5 Lakh+', '₹5L+', 40], ['Need a recommendation', 'Recommend', 10]] }, DECISION],
+    next: [['A WhatsApp from our team', 'within a few working hours.'], ['Your FREE automation audit:', 'how many hours you can save, task by task.'], ['Fixed-price proposal', 'with your 1-year free AMC included.']],
+    company: true
+  },
+  marketing: {
+    eyebrow: 'Digital Marketing & Lead Generation',
+    h1: 'Get found on Google. <em>Get leads on WhatsApp.</em> Get customers.',
+    sub: 'Spending on ads but the phone isn\'t ringing? Competitors showing up on Google and you\'re not? Tell us your goals and budget. We\'ll show you exactly where you\'re losing customers, before you spend a rupee more.',
+    offers: [['🔍', 'FREE digital audit', 'Website, SEO, Google ranking & social media reviewed'], ['📍', 'FREE Google Business Profile tune-up', 'Show up in "near me" searches'],
+      ['🗓️', 'FREE 1st-month content calendar', 'Posts planned for Instagram & Facebook'], ['📊', 'FREE monthly results report', 'Leads, cost per lead & ROI, in plain language']],
+    why: [['🎯', 'Leads, not likes.', 'We measure enquiries and sales, not vanity numbers.'], ['💸', 'Every rupee tracked.', 'You see what each campaign brings in.'], ['📍', 'Local + national reach.', 'From your neighbourhood to all of India.']],
+    disc: '',
+    s1: { title: 'Tell us about your business', hint: '30 seconds. We\'ll check your current presence before we call.', fields: [
+      COMPANY, INDUSTRY,
+      { k: 'website', label: 'Website or Instagram link (optional)', type: 'text', ph: 'www.yourcompany.com or @yourbrand' },
+      { k: 'targetArea', label: 'Where are your customers?', type: 'radio', req: true, opts: ['My city / local area', 'My state', 'All of India', 'International / US'] }] },
+    s2: { title: 'What\'s holding your growth back?', hint: 'Pick your goals and problems. We\'ll map each one to a fix.', fields: [
+      { k: 'goals', label: 'Your goals', type: 'check', req: true, opts: ['More leads & enquiries', 'More online sales', 'Rank higher on Google', 'More walk-ins / footfall', 'Grow Instagram & brand', 'Better ROI on ads'] },
+      { k: 'challenges', label: 'Biggest challenges', type: 'check', opts: ['Ads burning money, low ROI', 'Not showing on Google', 'No time for social media', 'Website doesn\'t convert', 'Leads are low quality', 'Don\'t know what\'s working'] },
+      { k: 'channels', label: 'Channels you\'re interested in', type: 'check', opts: ['SEO', 'Google Ads', 'Meta (Facebook / Instagram) ads', 'Instagram content & reels', 'YouTube', 'WhatsApp marketing', 'Google Business Profile', 'Not sure, advise me'] },
+      { k: 'adSpend', label: 'Current monthly ad spend', type: 'select', req: true, opts: ['Nothing yet', 'Under ₹10,000', '₹10,000 – ₹50,000', '₹50,000 – ₹2 Lakh', '₹2 Lakh+'] },
+      { k: 'painText', label: 'In your own words: what result would make this a big win for you?', type: 'textarea', req: true, ph: 'e.g. We spend ₹30k a month on Instagram ads but get only 5–6 serious enquiries. We want 30+ quality leads a month for our clinic…' }] },
+    s3: [{ k: 'budget', label: 'Monthly marketing budget (our fee + ads)', type: 'budget', req: true, opts: [['Under ₹15,000 / month', 'Under ₹15k', 5], ['₹15,000 – ₹30,000 / month', '₹15k – 30k', 15], ['₹30,000 – ₹75,000 / month', '₹30k – 75k', 25], ['₹75,000 – ₹2 Lakh / month', '₹75k – 2L', 35], ['₹2 Lakh+ / month', '₹2L+', 40], ['Need a recommendation', 'Recommend', 10]] }, DECISION],
+    next: [['A WhatsApp from our team', 'within a few working hours.'], ['Your FREE digital audit:', 'where you\'re losing customers & quick wins.'], ['Clear monthly plan', 'with expected leads, budget split & reporting.']],
+    company: true
+  }
+};
+var LABELS = { algo: 'Algo Trading', development: 'Software Development', automation: 'Software Automation', marketing: 'Digital Marketing' };
+
+var current = 'algo', params = {}, stepIdx = 0;
+function $(s, r) { return (r || document).querySelector(s); }
+function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function attr(s) { return esc(s).replace(/"/g, '&quot;'); }
+
+/* ---------- render fields ---------- */
+function fieldHtml(f) {
+  var req = f.req ? ' data-req' : '', opt = f.req ? '' : ' <span class="opt">(optional)</span>';
+  if (f.label.indexOf('(optional)') > -1) opt = '';
+  var id = 'f_' + f.k;
+  if (f.type === 'radio' || f.type === 'check') {
+    var t = f.type === 'radio' ? 'radio' : 'checkbox';
+    return '<div class="f" data-group="' + f.k + '"' + req + '><div class="lb">' + esc(f.label) + opt + '</div><div class="chips">' +
+      f.opts.map(function (o) { return '<label class="chip"><input type="' + t + '" name="' + f.k + '" value="' + attr(o) + '">' + esc(o) + '</label>'; }).join('') +
+      '</div><div class="emsg">' + (t === 'radio' ? 'Please pick one.' : 'Pick at least one.') + '</div></div>';
+  }
+  if (f.type === 'budget') {
+    return '<div class="f" data-group="' + f.k + '"' + req + '><div class="lb">' + esc(f.label) + '</div><div class="cards">' +
+      f.opts.map(function (o) { return '<label class="chip"><input type="radio" name="budget" value="' + attr(o[0]) + '" data-score="' + o[2] + '">' + esc(o[1]) + '</label>'; }).join('') +
+      '</div><div class="emsg">Please pick a range.</div></div>';
+  }
+  if (f.type === 'select') {
+    return '<div class="f"><label for="' + id + '">' + esc(f.label) + opt + '</label><select id="' + id + '" name="' + f.k + '"' + (f.req ? ' required' : '') + '><option value="">Select…</option>' +
+      f.opts.map(function (o) { return '<option>' + esc(o) + '</option>'; }).join('') + '</select><div class="emsg">Please select.</div></div>';
+  }
+  if (f.type === 'textarea') {
+    return '<div class="f"><label for="' + id + '">' + esc(f.label) + '</label><textarea id="' + id + '" name="' + f.k + '"' + (f.req ? ' required minlength="15"' : '') +
+      ' maxlength="1500" placeholder="' + attr(f.ph || '') + '"></textarea><div class="counter"><span class="cc">0</span> / 1500</div><div class="emsg">A line or two helps us prepare (min 15 characters).</div></div>';
+  }
+  return '<div class="f"><label for="' + id + '">' + esc(f.label) + opt + '</label><input id="' + id + '" type="text" name="' + f.k + '"' + (f.req ? ' required' : '') +
+    ' placeholder="' + attr(f.ph || '') + '"><div class="emsg">Please fill this in.</div></div>';
+}
+function renderFields(list) {
+  var out = '', i = 0;
+  while (i < list.length) {
+    if (list[i].half && list[i + 1] && list[i + 1].half) { out += '<div class="row2">' + fieldHtml(list[i]) + fieldHtml(list[i + 1]) + '</div>'; i += 2; }
+    else { out += fieldHtml(list[i]); i++; }
+  }
+  return out;
+}
+
+function setService(key) {
+  current = SERVICES[key] ? key : 'algo';
+  var c = SERVICES[current];
+  $('#svc').value = current;
+  $('#eyebrow').textContent = c.eyebrow;
+  $('#h1').innerHTML = c.h1;
+  $('#sub').textContent = c.sub;
+  $('#offerList').innerHTML = c.offers.map(function (o) {
+    return '<li><div class="ic">' + o[0] + '</div><div><b>' + esc(o[1]) + '</b><br><span>' + esc(o[2]) + '</span></div></li>';
+  }).join('');
+  $('#why').innerHTML = c.why.map(function (w) { return '<div><span>' + w[0] + '</span><span><b>' + esc(w[1]) + '</b> ' + esc(w[2]) + '</span></div>'; }).join('');
+  $('#disc').textContent = c.disc; $('#disc').style.display = c.disc ? '' : 'none';
+  $('#s1title').textContent = c.s1.title; $('#s1hint').textContent = c.s1.hint; $('#s1fields').innerHTML = renderFields(c.s1.fields);
+  $('#s2title').textContent = c.s2.title; $('#s2hint').textContent = c.s2.hint; $('#s2fields').innerHTML = renderFields(c.s2.fields);
+  $('#s3fields').innerHTML = renderFields(c.s3);
+  // company-type forms: email required, designation shown
+  var email = $('#email');
+  if (c.company) { email.setAttribute('required', ''); $('#emailOpt').classList.add('hide'); $('#desigWrap').classList.remove('hide'); }
+  else { email.removeAttribute('required'); $('#emailOpt').classList.remove('hide'); $('#desigWrap').classList.add('hide'); }
+  $('#tickerText').textContent = '🏆 Every complete entry enters the draw: ' + CONFIG.DRAW_PRIZE + ' (closes ' + deadlineText() + ')';
+  document.title = 'GrowWWW · ' + LABELS[current] + ': Tell us your requirement';
+  try { var u = new URL(location.href); u.searchParams.set('type', current); history.replaceState(null, '', u); } catch (e) {}
+}
+
+/* ---------- countdown ---------- */
+function deadline() { var d = new Date(CONFIG.OFFER_DEADLINE); return isNaN(d) ? null : d; }
+function deadlineText() { var d = deadline(); return d ? d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata' }) : ''; }
+function tick() {
+  var d = deadline(), el = $('#count');
+  if (!d) { el.innerHTML = ''; return; }
+  var ms = d - Date.now();
+  if (ms <= 0) { el.innerHTML = '<span class="lbl">This month\'s draw has closed. Bonuses still apply.</span>'; return; }
+  var s = Math.floor(ms / 1000), parts = [[Math.floor(s / 86400), 'days'], [Math.floor(s % 86400 / 3600), 'hrs'], [Math.floor(s % 3600 / 60), 'min'], [s % 60, 'sec']];
+  el.innerHTML = '<span class="lbl">⏳ Draw closes in</span>' + parts.map(function (p) { return '<div class="u"><b>' + ('0' + p[0]).slice(-2) + '</b><i>' + p[1] + '</i></div>'; }).join('');
+}
+
+/* ---------- interactions ---------- */
+document.addEventListener('change', function (e) {
+  var inp = e.target;
+  if (inp.id === 'svc') { setService(inp.value); return; }
+  if (!inp.closest || !inp.closest('.chip')) return;
+  $$('input[name="' + inp.name + '"]', inp.form).forEach(function (i) { i.closest('.chip').classList.toggle('on', i.checked); });
+  var g = inp.closest('.f'); if (g) g.classList.remove('err');
+});
+document.addEventListener('input', function (e) {
+  var f = e.target.closest && e.target.closest('.f'); if (f) f.classList.remove('err');
+  if (e.target.tagName === 'TEXTAREA' && f) { var cc = $('.cc', f); if (cc) cc.textContent = e.target.value.length; }
+});
+
+function validPhone(v) { var d = v.replace(/\D/g, ''); return d.length >= 10 && d.length <= 15; }
+function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+
+function validateStep(step) {
+  var firstBad = null;
+  $$('.f', step).forEach(function (f) { f.classList.remove('err'); });
+  $$('[data-group][data-req]', step).forEach(function (g) {
+    if (!$$('input:checked', g).length) { g.classList.add('err'); firstBad = firstBad || g; }
+  });
+  $$('input:not([type=radio]):not([type=checkbox]),select,textarea', step).forEach(function (el) {
+    if (!el.closest('.f')) return;
+    var v = el.value.trim(), bad = false;
+    if (el.hasAttribute('required') && !v) bad = true;
+    if (v && el.hasAttribute('data-phone') && !validPhone(v)) bad = true;
+    if (v && el.type === 'email' && !validEmail(v)) bad = true;
+    if (el.tagName === 'TEXTAREA' && el.hasAttribute('required') && v.length < 15) bad = true;
+    if (bad) { el.closest('.f').classList.add('err'); firstBad = firstBad || el; }
+  });
+  if (firstBad) {
+    (firstBad.closest('.f') || firstBad).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (firstBad.focus && firstBad.tagName !== 'DIV') firstBad.focus({ preventScroll: true });
+  }
+  return !firstBad;
+}
+
+var form = $('#lead'), steps = $$('.step', form);
+function go(n) {
+  stepIdx = Math.max(0, Math.min(steps.length - 1, n));
+  steps.forEach(function (s, k) { s.classList.toggle('on', k === stepIdx); });
+  $$('.prog div', form).forEach(function (d, k) { d.classList.toggle('done', k <= stepIdx); });
+  $('.sn', form).textContent = stepIdx + 1;
+  $('.sl', form).textContent = steps[stepIdx].dataset.label;
+  $('#card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+form.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-nav]'); if (!b) return;
+  e.preventDefault();
+  if (b.dataset.nav === 'next') { if (validateStep(steps[stepIdx])) go(stepIdx + 1); } else go(stepIdx - 1);
+});
+// Click handler as well as submit, so it also works where form submit events are blocked (sandboxed previews).
+function trySubmit(e) { e.preventDefault(); if (form.dataset.sending) return; if (validateStep(steps[stepIdx])) submit(); }
+form.addEventListener('submit', trySubmit);
+$('#submitBtn').addEventListener('click', trySubmit);
+
+function makeId(type) {
+  var d = new Date(), p = function (n) { return ('0' + n).slice(-2); };
+  var pre = { algo: 'ALG', development: 'DEV', automation: 'AUT', marketing: 'MKT' }[type] || 'GRW';
+  return pre + '-' + String(d.getFullYear()).slice(2) + p(d.getMonth() + 1) + p(d.getDate()) + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+}
+
+function collect() {
+  var data = {};
+  $$('input,select,textarea', form).forEach(function (el) {
+    if (!el.name) return;
+    if ((el.type === 'checkbox' || el.type === 'radio') && !el.checked) return;
+    if (el.closest('.hide')) return;
+    var v = el.value.trim(); if (!v) return;
+    data[el.name] = data[el.name] ? data[el.name] + ', ' + v : v;
+  });
+  var b = $('input[name=budget]:checked', form), t = $('input[name=timeline]:checked', form);
+  data._budgetScore = b ? b.dataset.score : 0;
+  data._timelineScore = t ? t.dataset.score : 0;
+  data.formType = current;
+  data.leadId = makeId(current);
+  var src = params.utm_source || params.src || params.ref || '';
+  if (params.utm_campaign) src += (src ? ' / ' : '') + params.utm_campaign;
+  if (!src && document.referrer) { try { src = new URL(document.referrer).hostname; } catch (e) {} }
+  data.source = src || 'Direct';
+  data._t = LOADED_AT;
+  return data;
+}
+
+function isPreview() { return location.protocol === 'file:' || location.protocol === 'about:' || location.origin === 'null'; }
+
+function submit() {
+  var btn = $('#submitBtn'), label = btn.innerHTML, errBox = $('.formerr', form);
+  btn.disabled = true; form.dataset.sending = '1'; btn.textContent = 'Sending…'; errBox.style.display = 'none';
+  var data = collect(), demo = isPreview(), p;
+  if (demo) p = new Promise(function (res) { setTimeout(res, 700); });
+  else p = fetch(CONFIG.ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': CONFIG.SUPABASE_KEY }, body: JSON.stringify(data) })
+    .then(function (r) { return r.json().then(function (j) { if (!r.ok || !j.ok) throw new Error(j.error || 'failed'); return j; }); })
+    .then(function (j) { if (j.leadId) data.leadId = j.leadId; });
+  p.then(function () { showThanks(data, demo); })
+   .catch(function (err) {
+     btn.disabled = false; delete form.dataset.sending; btn.innerHTML = label;
+     errBox.innerHTML = esc(err && err.message && err.message !== 'failed' && err.message.indexOf('fetch') === -1 ? err.message : 'Something went wrong.') +
+       ' Please try again, or <a href="https://wa.me/' + CONFIG.WHATSAPP_NUMBER + '" target="_blank">message us on WhatsApp</a>.';
+     errBox.style.display = 'block';
+   });
+}
+
+function showThanks(d, demo) {
+  var c = SERVICES[d.formType], first = (d.name || '').split(/\s+/)[0] || 'there';
+  form.hidden = true;
+  $('#tyTitle').textContent = "You're in the draw, " + first + '!';
+  $('#tySub').textContent = 'Your ' + LABELS[d.formType] + ' requirement is with our team. Here\'s what happens next.';
+  $('#tyId').textContent = 'ENTRY / LEAD ID · ' + d.leadId;
+  $('#tyOffers').innerHTML = '<div>🏆 <b style="display:inline;color:inherit;text-transform:none;letter-spacing:0">Entered: ' + esc(CONFIG.DRAW_PRIZE) + '</b></div>' +
+    c.offers.map(function (o) { return '<div>' + o[0] + ' <b style="display:inline;color:inherit;text-transform:none;letter-spacing:0">' + esc(o[1]) + '</b></div>'; }).join('');
+  $('#tyNext').innerHTML = c.next.map(function (n, k) { return '<div><i>' + (k + 1) + '</i><span><b>' + esc(n[0]) + '</b> ' + esc(n[1]) + '</span></div>'; }).join('');
+  var msg = 'Hi GrowWWW 👋\nI just filled your ' + LABELS[d.formType] + ' requirement form.\n\nName: ' + (d.name || '') +
+    (d.company ? '\nCompany: ' + d.company : '') + '\nLead ID: ' + d.leadId + '\nBudget: ' + (d.budget || '') +
+    '\n\nI\'d like to claim my free bonus. When can we talk?';
+  $('#tyWa').href = 'https://wa.me/' + CONFIG.WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg);
+  $('#demoNote').style.display = demo ? 'block' : 'none';
+  $('#thanks').style.display = 'block';
+  $('#card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ---------- boot ---------- */
+try { new URLSearchParams(location.search).forEach(function (v, k) { params[k] = v; }); } catch (e) {}
+var pathType = (location.pathname.match(/\/(algo|development|automation|marketing)\b/) || [])[1];
+$('#drawPrize').textContent = CONFIG.DRAW_PRIZE;
+$('#drawNote').textContent = CONFIG.DRAW_NOTE;
+setService(params.type || pathType || 'algo');
+$$('.prog div', form)[0].classList.add('done');
+$('.sl', form).textContent = steps[0].dataset.label;
+tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>
