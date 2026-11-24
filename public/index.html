@@ -396,6 +396,21 @@ try {
   history.pushState({ gw: 1 }, '');
   window.addEventListener('popstate', function () { if (!submitted && !exitShown) openExit(); });
 } catch (e) {}
+// switched to another tab/app: show the popup the moment they come back
+var hiddenAt = 0;
+document.addEventListener('visibilitychange', function () {
+  if (document.visibilityState === 'hidden') { if (Date.now() - LOADED_AT > 4000) hiddenAt = Date.now(); }
+  else if (hiddenAt) { hiddenAt = 0; setTimeout(openExit, 300); }
+});
+// closing the tab/window with the form half-filled: the browser shows its own "Leave site?" warning
+// (browsers don't allow a custom popup on close; our popup then appears if they choose to stay)
+window.addEventListener('beforeunload', function (e) {
+  if (submitted) return;
+  if ($('#name').value.trim() || $('#phone').value.trim() || $('#exitPhone').value.trim()) {
+    setTimeout(openExit, 500);
+    e.preventDefault(); e.returnValue = ''; return '';
+  }
+});
 $('#exitClose').addEventListener('click', closeExit);
 $('#exitNo').addEventListener('click', closeExit);
 $('#exitModal').addEventListener('click', function (e) { if (e.target.id === 'exitModal') closeExit(); });
