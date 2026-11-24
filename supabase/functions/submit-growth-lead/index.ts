@@ -1,11 +1,15 @@
-// GrowWWW - multi-service requirement form handler (Algo / Development / Automation / Marketing) (separate from website submit-enquiry).
-// 1. Validates + spam-filters (honeypot, too-fast submit, 5 per hour per connection).
-// 2. Saves to public.growth_form_leads (NOT contact_submissions).
-// 3. Sends a Telegram alert to the same chat as website enquiries.
-// 4. Adds a row to the same Google Sheet, one tab per service (see TAB below).
+// GrowWWW - quick lead form handler (separate from website submit-enquiry).
 //
-// Reuses existing secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, GOOGLE_SHEET_WEBHOOK_URL, GOOGLE_SHEET_SECRET.
-// Optional: GROWTH_SHEET_LINK (Sheet URL button in Telegram), GROWTH_YOUR_NAME (default "Anshu").
+// Three kinds of request (body.kind):
+//   "lead"     - the 10-second form: issue + name + WhatsApp + best time (+ optional budget)
+//   "callback" - exit popup: issue + WhatsApp + best time (visitor was leaving)
+//   "details"  - optional extra details sent after a lead (leadId + same phone)
+//
+// Every request: saved in public.growth_form_leads, Telegram alert (same chat as website enquiries),
+// and a Google Sheet row (one tab per service, "Callback Requests" for callbacks; details update the lead's row).
+//
+// Reuses secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, GOOGLE_SHEET_WEBHOOK_URL, GOOGLE_SHEET_SECRET.
+// Optional: GROWTH_SHEET_LINK (Sheet button in Telegram), GROWTH_YOUR_NAME (default "Anshu").
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const cors = {
@@ -16,60 +20,40 @@ const cors = {
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
 
-type Type = "algo" | "development" | "automation" | "marketing" | "corporate";
-const TYPES: Type[] = ["algo", "development", "automation", "marketing", "corporate"];
-const env = (k: string, d = "") => (Deno.env.get(k) || d).trim();
-const esc = (s: string) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const clean = (v: unknown, max = 500) => {
-  if (typeof v !== "string" && typeof v !== "number") return "";
-  return String(v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "").trim().slice(0, max);
-};
-
-// Answer fields per form: [key, Sheet header, Telegram label]
-const BIZ: [string, string, string][] = [
-  ["company", "Company", "🏢 Company"], ["designation", "Designation", "🎖 Designation"], ["industry", "Industry", "🏭 Industry"],
-];
-const FIELDS: Record<Type, [string, string, string][]> = {
-  algo: [
-    ["traderType", "Trader Type", "👤 Type"], ["experience", "Experience", "🎓 Experience"],
-    ["markets", "Markets", "📊 Markets"], ["broker", "Broker", "🏦 Broker"], ["capital", "Trading Capital", "💼 Capital"],
-    ["strategyStatus", "Strategy Status", "🧠 Strategy"], ["wants", "Wants Built", "🛠 Wants"],
-    ["painPoints", "Pain Points", "😣 Pain points"],
-  ],
-  development: [...BIZ,
-    ["projectType", "Project Type", "💻 Project"], ["stage", "Stage", "🧭 Stage"], ["features", "Features", "🧩 Features"],
-    ["challenges", "Challenges", "😣 Challenges"], ["reference", "Reference App/Site", "🔗 Likes"], ["decisionMaker", "Decision Maker", "🔑 Decision"],
-  ],
-  automation: [...BIZ,
-    ["size", "Team Size", "👥 Team"], ["tools", "Tools Used", "🧰 Tools"], ["processes", "Tasks to Automate", "⚙️ Automate"],
-    ["hoursLost", "Hours Lost / Week", "⏱ Hours lost"], ["decisionMaker", "Decision Maker", "🔑 Decision"],
-  ],
-  marketing: [...BIZ,
-    ["website", "Website / Instagram", "🌐 Web"], ["targetArea", "Target Area", "📍 Target"], ["goals", "Goals", "🎯 Goals"],
-    ["challenges", "Challenges", "😣 Challenges"], ["channels", "Channels", "📣 Channels"], ["adSpend", "Current Ad Spend", "💸 Ad spend"],
-    ["decisionMaker", "Decision Maker", "🔑 Decision"],
-  ],
-  corporate: [...BIZ,
-    ["size", "Company Size", "👥 Team"], ["website", "Website", "🌐 Website"], ["challenges", "Challenges", "😣 Challenges"],
-    ["services", "Services Needed", "🛠 Services"], ["decisionMaker", "Decision Maker", "🔑 Decision"],
-  ],
-};
-const TAB: Record<Type, string> = {
+type Svc = "algo" | "development" | "automation" | "marketing" | "general" | "corporate";
+const SVCS: Svc[] = ["algo", "development", "automation", "marketing", "general", "corporate"];
+const TAB: Record<Svc, string> = {
   algo: "Algo Leads", development: "Development Leads", automation: "Automation Leads",
-  marketing: "Marketing Leads", corporate: "Corporate Leads",
+  marketing: "Marketing Leads", general: "General Leads", corporate: "Corporate Leads",
 };
-const LABEL: Record<Type, string> = {
-  algo: "ALGO TRADING", development: "SOFTWARE DEVELOPMENT", automation: "SOFTWARE AUTOMATION",
-  marketing: "DIGITAL MARKETING", corporate: "CORPORATE",
+const CALLBACK_TAB = "Callback Requests";
+const LABEL: Record<Svc, string> = {
+  algo: "TRADING SOFTWARE", development: "SOFTWARE DEVELOPMENT", automation: "AUTOMATION",
+  marketing: "DIGITAL MARKETING", general: "GENERAL", corporate: "CORPORATE",
 };
-const PREFIX: Record<Type, string> = { algo: "ALG", development: "DEV", automation: "AUT", marketing: "MKT", corporate: "CRP" };
-const BONUS: Record<Type, string> = {
+const PREFIX: Record<Svc, string> = { algo: "ALG", development: "DEV", automation: "AUT", marketing: "MKT", general: "GEN", corporate: "CRP" };
+const BONUS: Record<Svc, string> = {
   algo: "*1-Year FREE AMC* and *free backtest report*",
   development: "*1-Year FREE AMC* and *free design mockup*",
   automation: "*1-Year FREE AMC* and *free automation audit*",
   marketing: "*free digital audit* and *Google Business Profile tune-up*",
+  general: "*1-Year FREE AMC* and *free audit*",
   corporate: "*1-Year FREE AMC* and *free digital audit*",
 };
+// optional details: [key, Sheet header, Telegram label]
+const DETAILS: [string, string, string][] = [
+  ["company", "Company", "🏢 Company"], ["email", "Email", "✉️ Email"], ["city", "City / Country", "📍 City"],
+  ["website", "Website / Instagram", "🌐 Web"], ["timeline", "Timeline", "⏱ Timeline"], ["painText", "Problem (in their words)", "📝 Problem"],
+];
+const ID_RE = /^(ALG|DEV|AUT|MKT|GEN|CRP|CBK)-\d{6}-[A-Z0-9]{4}$/;
+
+const env = (k: string, d = "") => (Deno.env.get(k) || d).trim();
+const esc = (s: string) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const clean = (v: unknown, max = 300) => {
+  if (typeof v !== "string" && typeof v !== "number") return "";
+  return String(v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "").trim().slice(0, max);
+};
+const istNow = () => new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" });
 
 async function sha256(t: string) {
   const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t));
@@ -84,39 +68,23 @@ function normalisePhone(p: string) {
   return d.length >= 11 && d.length <= 15 ? d : "";
 }
 
-function makeId(type: Type) {
+function makeId(prefix: string) {
   const ist = new Date(Date.now() + 5.5 * 3600e3).toISOString();
-  const rnd = crypto.getRandomValues(new Uint8Array(4));
-  const code = Array.from(rnd).map((b) => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[b % 32]).join("");
-  return `${PREFIX[type]}-${ist.slice(2, 4)}${ist.slice(5, 7)}${ist.slice(8, 10)}-${code}`;
+  const code = Array.from(crypto.getRandomValues(new Uint8Array(4))).map((b) => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[b % 32]).join("");
+  return `${prefix}-${ist.slice(2, 4)}${ist.slice(5, 7)}${ist.slice(8, 10)}-${code}`;
 }
 
-function scoreLead(d: Record<string, string>, type: Type) {
-  const n = (v: string, max: number) => Math.max(0, Math.min(max, parseInt(v, 10) || 0));
-  let s = n(d._budgetScore, 40) + n(d._timelineScore, 25);
-  if ((d.painText || "").length >= 40) s += 10;
-  if ((d.email || "").includes("@")) s += 5;
-  if (type === "algo") {
-    const st = d.strategyStatus || "";
-    if (/^Rules are written/i.test(st)) s += 15;
-    else if (/TradingView|Amibroker|Excel/i.test(st)) s += 10;
-    else if (/manually/i.test(st)) s += 5;
-  } else {
-    const dm = d.decisionMaker || "";
-    if (/^Yes/i.test(dm)) s += 15;
-    else if (/part/i.test(dm)) s += 8;
-  }
-  return Math.min(100, s);
+const num = (v: string, max: number) => Math.max(0, Math.min(max, parseInt(v, 10) || 0));
+const priorityOf = (s: number) => (s >= 60 ? "🔥 Hot" : s >= 35 ? "🌤 Warm" : "❄️ Cold");
+
+function waUrl(phoneIntl: string, text: string) {
+  return `https://wa.me/${phoneIntl}?text=${encodeURIComponent(text)}`;
 }
 
-function followUpUrl(d: Record<string, string>, type: Type, phoneIntl: string, leadId: string) {
+function followUpText(svc: Svc, name: string, issue: string, leadId: string) {
   const me = env("GROWTH_YOUR_NAME", "Anshu");
-  const first = d.name.split(/\s+/)[0] || "there";
-  let pain = (d.painText || "").replace(/\s+/g, " ");
-  if (pain.length > 90) pain = pain.slice(0, 87) + "…";
-  const what = type === "algo" ? "algo trading" : type === "development" ? "software development" : type === "automation" ? "automation" : type === "marketing" ? "digital marketing" : "business";
-  const msg = `Hi ${first}, this is ${me} from GrowWWW 👋\n\nThanks for sharing ${d.company ? d.company + "'s" : "your"} ${what} requirement${pain ? ` — especially: "${pain}"` : ""}.\n\nThis is exactly the kind of thing we solve. Your ${BONUS[type]} are reserved under Lead ID ${leadId}, and you're entered in this month's lucky draw 🏆\n\nCan we do a quick 15-min call today or tomorrow? 🚀`;
-  return `https://wa.me/${phoneIntl}?text=${encodeURIComponent(msg)}`;
+  const first = (name || "").split(/\s+/)[0] || "there";
+  return `Hi ${first}, this is ${me} from GrowWWW 👋\n\nThanks for reaching out about "${issue}". This is exactly the kind of problem we solve.\n\nYour ${BONUS[svc]} are reserved under Lead ID ${leadId}, and you're entered in this month's lucky draw 🏆\n\nIs now a good time for a quick 10-min call?`;
 }
 
 async function sendTelegram(text: string, buttons: { text: string; url: string }[][]) {
@@ -136,28 +104,32 @@ async function sendTelegram(text: string, buttons: { text: string; url: string }
   }
 }
 
-// Sends { secret, sheet_tab, row } — the GrowthLeads.gs add-on writes `row` into tab `sheet_tab`.
-async function sendToSheet(tab: string, row: Record<string, string | number>) {
+// Sends { secret, sheet_tab, row [, update_lead_id] } to the GrowthLeads.gs add-on.
+async function sendToSheet(tab: string, row: Record<string, string | number>, updateLeadId?: string) {
   const url = env("GOOGLE_SHEET_WEBHOOK_URL"), secret = env("GOOGLE_SHEET_SECRET");
   if (!url || !secret) return { ok: false, reason: "Google Sheet secrets not set" };
   try {
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ secret, sheet_tab: tab, row }),
+      body: JSON.stringify({ secret, sheet_tab: tab, row, update_lead_id: updateLeadId || undefined }),
       redirect: "follow",
       signal: AbortSignal.timeout(10000),
     });
     const text = await res.text();
     let data: { ok?: boolean; tab?: string; error?: string } = {};
     try { data = JSON.parse(text); } catch { /* HTML page */ }
-    // `tab` in the reply proves the GrowthLeads add-on handled it (not the old website handler).
     if (data.ok && data.tab === tab) return { ok: true };
-    if (data.ok) return { ok: false, reason: "Apps Script add-on not installed yet (row may have gone to the website tab)" };
+    if (data.ok) return { ok: false, reason: "Apps Script add-on not installed/updated yet" };
     return { ok: false, reason: data.error || `Sheet replied ${res.status}` };
   } catch (e) {
     return { ok: false, reason: `Couldn't reach Google Sheet: ${(e as Error).message}` };
   }
+}
+
+function sheetButton(): { text: string; url: string }[][] {
+  const link = env("GROWTH_SHEET_LINK");
+  return /^https:\/\//.test(link) ? [[{ text: "📊 Open Google Sheet", url: link }]] : [];
 }
 
 Deno.serve(async (req) => {
@@ -168,87 +140,134 @@ Deno.serve(async (req) => {
   try { body = await req.json(); } catch { return json({ ok: false, error: "Invalid request" }, 400); }
   if (!body || typeof body !== "object") return json({ ok: false, error: "Invalid request" }, 400);
 
-  // Spam: honeypot / submitted < 3s after page load → pretend success, store nothing.
+  // Spam: honeypot / submitted < 2s after page load -> pretend success, store nothing.
   if (clean(body.hp)) return json({ ok: true, leadId: "OK" });
   const t = Number(body._t);
-  if (Number.isFinite(t) && t > 0 && Date.now() - t < 3000) return json({ ok: true, leadId: "OK" });
+  if (Number.isFinite(t) && t > 0 && Date.now() - t < 2000) return json({ ok: true, leadId: "OK" });
 
-  const type: Type = TYPES.includes(body.formType as Type) ? (body.formType as Type) : "algo";
+  const kind = body.kind === "callback" ? "callback" : body.kind === "details" ? "details" : "lead";
   const d: Record<string, string> = {};
-  for (const [k, v] of Object.entries(body)) if (k !== "hp" && k !== "_t") d[k] = clean(v, k === "painText" ? 2000 : 500);
+  for (const [k, v] of Object.entries(body)) if (k !== "hp" && k !== "_t") d[k] = clean(v, k === "painText" ? 2000 : 300);
+  const svc: Svc = SVCS.includes(d.formType as Svc) ? (d.formType as Svc) : "general";
 
-  const required = type === "algo"
-    ? ["name", "phone", "city", "budget", "timeline", "painText"]
-    : ["name", "phone", "email", "company", "city", "budget", "timeline", "painText"]; // all business services
-  const missing = required.filter((k) => !d[k]);
-  if (missing.length) return json({ ok: false, error: "Please fill all required fields." }, 400);
-  if (d.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email)) return json({ ok: false, error: "Please check your email address." }, 400);
-  const phoneIntl = normalisePhone(d.phone);
+  const phoneIntl = normalisePhone(d.phone || "");
   if (!phoneIntl) return json({ ok: false, error: "Please enter a valid WhatsApp number." }, 400);
+  if (d.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email)) return json({ ok: false, error: "Please check your email address." }, 400);
 
   const admin = createClient(env("SUPABASE_URL"), env("SUPABASE_SERVICE_ROLE_KEY"), { auth: { persistSession: false } });
-
   const ip = (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "unknown";
   const ipHash = await sha256(ip + (Deno.env.get("IP_SALT") || "growwww"));
+  const when = istNow();
+
+  // ------------------------------------------------------------------ details
+  if (kind === "details") {
+    if (!ID_RE.test(d.leadId || "")) return json({ ok: false, error: "Invalid request" }, 400);
+    const { data: lead } = await admin.from("growth_form_leads")
+      .select("id, lead_id, form_type, name, phone_intl, score, answers, created_at, issue")
+      .eq("lead_id", d.leadId).maybeSingle();
+    // only the same phone, within 24h of the lead
+    if (!lead || lead.phone_intl !== phoneIntl || Date.now() - new Date(lead.created_at).getTime() > 864e5) {
+      return json({ ok: false, error: "Could not find your request. Please WhatsApp us." }, 404);
+    }
+    const added: Record<string, string> = {};
+    for (const [k] of DETAILS) if (d[k]) added[k] = d[k];
+    if (!Object.keys(added).length) return json({ ok: true, leadId: lead.lead_id });
+    let score = Number(lead.score) || 0;
+    if ((added.painText || "").length >= 30) score += 10;
+    if (added.email) score += 5;
+    score = Math.min(100, score + num(d._timelineScore, 20));
+    const priority = priorityOf(score);
+    await admin.from("growth_form_leads").update({
+      email: added.email || undefined, city: added.city || undefined, company: added.company || undefined,
+      timeline: added.timeline || undefined, pain_text: added.painText || undefined,
+      answers: { ...(lead.answers || {}), ...added }, score, priority,
+    }).eq("id", lead.id);
+
+    const lines = [
+      `📝 <b>MORE DETAILS</b> · ${priority} · ${score}/100`,
+      `<b>${esc(lead.name || "")}</b> · <code>+${phoneIntl}</code>`,
+      lead.issue ? `🎯 ${esc(lead.issue)}` : "",
+      "",
+      ...DETAILS.filter(([k]) => added[k]).map(([k, , label]) => `${label}: ${esc(added[k])}`),
+      "",
+      `🆔 <code>${lead.lead_id}</code>`,
+    ].filter((l, i, a) => l !== "" || (i > 0 && a[i - 1] !== ""));
+    const row: Record<string, string | number> = { "Priority": priority, "Score": score, "Details added": when };
+    for (const [k, header] of DETAILS) if (added[k]) row[header] = added[k];
+    const [tg, sheet] = await Promise.all([
+      sendTelegram(lines.join("\n"), sheetButton()),
+      sendToSheet(TAB[(lead.form_type as Svc) || "general"] || TAB.general, row, lead.lead_id),
+    ]);
+    if (!tg.ok) console.warn("telegram not sent:", tg.reason);
+    if (!sheet.ok) console.warn("sheet not updated:", sheet.reason);
+    return json({ ok: true, leadId: lead.lead_id });
+  }
+
+  // --------------------------------------------------------- lead / callback
+  const issue = d.issue || "Not selected";
+  if (kind === "lead" && !d.name) return json({ ok: false, error: "Please enter your name." }, 400);
+
   const { count } = await admin.from("growth_form_leads").select("id", { count: "exact", head: true })
     .eq("ip_hash", ipHash).gte("created_at", new Date(Date.now() - 3600e3).toISOString());
-  if ((count ?? 0) >= 5) return json({ ok: false, error: "Too many submissions. Please WhatsApp us instead." }, 429);
+  if ((count ?? 0) >= 6) return json({ ok: false, error: "Too many requests. Please WhatsApp us instead." }, 429);
 
-  const leadId = /^(ALG|DEV|AUT|MKT|CRP)-\d{6}-[A-Z0-9]{4}$/.test(d.leadId || "") ? d.leadId : makeId(type);
-  const score = scoreLead(d, type);
-  const priority = score >= 70 ? "🔥 Hot" : score >= 40 ? "🌤 Warm" : "❄️ Cold";
-  const waUrl = followUpUrl(d, type, phoneIntl, leadId);
-  const answers: Record<string, string> = {};
-  for (const [k] of FIELDS[type]) if (d[k]) answers[k] = d[k];
-  if (d.callTime) answers.callTime = d.callTime;
+  const leadId = kind === "callback" ? makeId("CBK") : (ID_RE.test(d.leadId || "") && !d.leadId.startsWith("CBK") ? d.leadId : makeId(PREFIX[svc]));
+  let score = kind === "callback" ? 20 : 30;
+  score += num(d._budgetScore, 40);
+  if (svc !== "general") score += 5;
+  score = Math.min(100, score);
+  const priority = priorityOf(score);
+  const callTime = d.callTime || "Anytime";
+  const followText = kind === "callback"
+    ? `Hi${d.name ? " " + d.name.split(/\s+/)[0] : ""}, this is ${env("GROWTH_YOUR_NAME", "Anshu")} from GrowWWW 👋\n\nYou asked us for a call back about "${issue}". Is this a good time for a quick 10-min chat?`
+    : followUpText(svc, d.name, issue, leadId);
+  const wa = waUrl(phoneIntl, followText);
 
-  const { data: row, error } = await admin.from("growth_form_leads").insert({
-    lead_id: leadId, form_type: type, name: d.name, phone: d.phone, phone_intl: phoneIntl,
-    email: d.email || null, city: d.city || null, company: d.company || null, budget: d.budget, timeline: d.timeline,
-    pain_text: d.painText, score, priority, answers, service: LABEL[type], source: d.source || "Direct", ip_hash: ipHash,
-  }).select("id").single();
+  const { error } = await admin.from("growth_form_leads").insert({
+    lead_id: leadId, lead_kind: kind, form_type: svc, service: LABEL[svc], issue, call_time: callTime,
+    name: d.name || null, phone: d.phone, phone_intl: phoneIntl, budget: d.budget || null,
+    score, priority, answers: { issue, callTime, budget: d.budget || "" }, source: d.source || "Direct",
+    ip_hash: ipHash, status: "new",
+  });
   if (error) {
     console.error("insert failed", error);
     return json({ ok: false, error: "Something went wrong. Please WhatsApp us." }, 500);
   }
 
-  // ---- Telegram ----
+  const head = kind === "callback"
+    ? `📞 <b>CALL BACK REQUEST</b> (left the form)`
+    : `${priority} <b>NEW LEAD · ${LABEL[svc]}</b> · ${score}/100`;
   const lines = [
-    `${priority} <b>${LABEL[type]} LEAD</b> · ${score}/100`,
+    head,
     "",
-    `<b>${esc(d.name)}</b>${d.city ? " · " + esc(d.city) : ""}`,
+    `🎯 <b>${esc(issue)}</b>`,
+    d.name ? `👤 ${esc(d.name)}` : "",
     `📱 <code>+${phoneIntl}</code>`,
-    d.email ? `✉️ ${esc(d.email)}` : "",
-    `💰 <b>${esc(d.budget)}</b>  ·  ⏱ ${esc(d.timeline)}`,
+    `⏰ Call: <b>${esc(callTime)}</b>`,
+    d.budget ? `💰 ${esc(d.budget)}` : "",
     "",
-    ...FIELDS[type].filter(([k]) => d[k]).map(([k, , label]) => `${label}: ${esc(d[k])}`),
-    "",
-    `📝 <i>${esc(d.painText.length > 1200 ? d.painText.slice(0, 1197) + "…" : d.painText)}</i>`,
-    "",
-    d.callTime ? `📞 Best time: ${esc(d.callTime)}` : "",
-    `🆔 <code>${leadId}</code> · Source: ${esc(d.source || "Direct")}`,
-  ].filter((l, i, a) => l !== "" || (a[i - 1] !== "" && i > 0));
-  const buttons = [[{ text: `💬 WhatsApp ${d.name.split(/\s+/)[0]}`, url: waUrl }]];
-  const sheetLink = env("GROWTH_SHEET_LINK");
-  if (/^https:\/\//.test(sheetLink)) buttons.push([{ text: "📊 Open Google Sheet", url: sheetLink }]);
+    `🆔 <code>${leadId}</code> · ${esc(d.source || "Direct")} · ${when}`,
+  ].filter((l, i, a) => l !== "" || (i > 0 && a[i - 1] !== ""));
+  const buttons = [[{ text: `💬 WhatsApp${d.name ? " " + d.name.split(/\s+/)[0] : ""}`, url: wa }], ...sheetButton()];
 
-  // ---- Sheet row (header → value; the add-on creates headers on first use) ----
-  const when = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" });
-  const sheetRow: Record<string, string | number> = {
+  const row: Record<string, string | number> = {
     "Timestamp (IST)": when, "Lead ID": leadId, "Priority": priority, "Score": score, "Status": "New",
-    "WhatsApp Follow-up": waUrl, "Name": d.name, "WhatsApp No.": "+" + phoneIntl, "Email": d.email,
-    "City / Country": d.city, "Service": LABEL[type],
+    "WhatsApp Follow-up": wa, "Issue": issue, "Name": d.name || "", "WhatsApp No.": "+" + phoneIntl,
+    "Best Time to Call": callTime, "Budget": d.budget || "", "Service": LABEL[svc], "Source": d.source || "Direct",
   };
-  for (const [k, header] of FIELDS[type]) sheetRow[header] = d[k] || "";
-  Object.assign(sheetRow, {
-    "Pain (in their words)": d.painText, "Budget": d.budget, "Timeline": d.timeline,
-    "Best Time to Call": d.callTime || "", "Source": d.source || "Direct", "Notes": "",
-  });
+  if (kind === "lead") {
+    for (const [, header] of DETAILS) row[header] = "";
+    row["Details added"] = "";
+  }
+  row["Notes"] = "";
 
-  const [tg, sheet] = await Promise.all([sendTelegram(lines.join("\n"), buttons), sendToSheet(TAB[type], sheetRow)]);
+  const [tg, sheet] = await Promise.all([
+    sendTelegram(lines.join("\n"), buttons),
+    sendToSheet(kind === "callback" ? CALLBACK_TAB : TAB[svc], row),
+  ]);
   if (!tg.ok) console.warn("telegram not sent:", tg.reason);
   if (!sheet.ok) console.warn("sheet not updated:", sheet.reason);
-  await admin.from("growth_form_leads").update({ telegram_sent: tg.ok, sheet_sent: sheet.ok }).eq("id", row.id);
+  await admin.from("growth_form_leads").update({ telegram_sent: tg.ok, sheet_sent: sheet.ok }).eq("lead_id", leadId);
 
   return json({ ok: true, leadId });
 });

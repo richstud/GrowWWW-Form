@@ -1,34 +1,25 @@
 # GrowWWW-form
 
-One lead form for four services: **Algo Trading, Software Development, Software Automation, Digital Marketing**.
-The visitor picks a service from the dropdown, and the questions, offers and copy change to match.
+A 10-second lead form. The visitor:
+1. **taps their problem** (8 options covering Software Development, Automation, Digital Marketing, Trading Software, Other),
+2. enters **name + WhatsApp + best time to call** (budget optional) → instant Telegram alert,
+3. can **optionally add details** (problem, company, city, email, timeline) → second Telegram alert, same Sheet row updated.
+
+If they try to leave first (mouse leaves the window on desktop, or the first Back press on mobile), a
+**"Get a FREE call back"** popup asks only for their number + best time. It sends **only when they tap "Call me back"**.
 
 ```
-public/                               ← the website (deploy this folder)
-  index.html                          ← the form; edit CONFIG near the bottom
-  _redirects                          ← /algo /development /automation /marketing links
-  favicon.ico, apple-touch-icon.png, assets/   ← GrowWWW logo icons
-netlify.toml                          ← Netlify settings (publish = public)
-supabase/functions/submit-growth-lead ← backend (already deployed to Supabase)
+public/index.html                     ← the form; edit CONFIG near the bottom
+public/_redirects                     ← /algo /development /automation /marketing links (highlight that issue)
+supabase/functions/submit-growth-lead ← backend (deployed to Supabase)
 google-apps-script/GrowthLeads.gs     ← add-on for your existing Google Sheet script
+netlify.toml                          ← Netlify settings (publish = public)
 ```
-
-## Links
-- `https://YOUR-SITE.netlify.app/` → opens on Algo Trading
-- `/algo`, `/development`, `/automation`, `/marketing` → opens with that service selected
-- Add `?utm_source=instagram` (or whatsapp, facebook, google) to track where leads come from.
-
-## Edit before going live (`public/index.html` → `CONFIG`)
-| Setting | What it is |
-|---|---|
-| `WHATSAPP_NUMBER` | your business WhatsApp, e.g. `919876543210` |
-| `OFFER_DEADLINE` | when the draw / countdown closes, e.g. `2026-12-31T23:59:59+05:30` |
-| `DRAW_PRIZE` / `DRAW_NOTE` | the lucky-draw prize and its rules. **Only promise what you will actually give.** |
 
 ## Where each lead goes
 - **Supabase**: table `growth_form_leads` (separate from website enquiries)
 - **Telegram**: same chat as website enquiries, titled e.g. "🔥 Hot SOFTWARE AUTOMATION LEAD"
-- **Google Sheet**: same Sheet, one tab per service: *Algo Leads, Development Leads, Automation Leads, Marketing Leads*
+- **Google Sheet**: same Sheet, one tab per service (*Algo / Development / Automation / Marketing / General Leads*) plus *Callback Requests*
   (needs the one-time add-on below)
 
 ## Google Sheet add-on (one time)

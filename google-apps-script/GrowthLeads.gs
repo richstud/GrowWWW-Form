@@ -1,9 +1,12 @@
 /**
  * GrowWWW — add-on for your EXISTING website lead Apps Script.
- * Writes form leads into one tab per service: Algo / Development / Automation / Marketing Leads
- * in the same Google Sheet. Your website enquiry tab is not touched.
+ * Writes form leads into their own tabs in the same Google Sheet:
+ *   Algo / Development / Automation / Marketing / General Leads, plus "Callback Requests"
+ *   (people who left the form but asked for a call back).
+ * When a visitor adds optional details later, their existing row is updated (matched by Lead ID).
+ * Your website enquiry tab is not touched.
  *
- * HOW TO INSTALL (2 minutes):
+ * HOW TO INSTALL (2 minutes) — or to UPDATE, replace the whole GrowthLeads file with this one:
  *  1. Open your existing Apps Script (the one whose /exec URL is in Supabase as GOOGLE_SHEET_WEBHOOK_URL).
  *  2. Click  +  → Script → name it  GrowthLeads  → paste this whole file.
  *  3. Set GROWTH_SECRET below to the SAME secret your website script already uses
@@ -20,7 +23,8 @@ var GROWTH_SECRET = 'PASTE-THE-SAME-SECRET-HERE';
 var GROWTH_STATUSES = ['New', 'Contacted', 'Call scheduled', 'Proposal sent', 'Negotiation', 'Won', 'Lost'];
 var GROWTH_TABS = {
   'Algo Leads': '#d9b45a', 'Development Leads': '#4f7cff', 'Automation Leads': '#3ecf8e',
-  'Marketing Leads': '#ff7a59', 'Corporate Leads': '#1f1f22'
+  'Marketing Leads': '#ff7a59', 'General Leads': '#a7a299', 'Callback Requests': '#e94b7a',
+  'Corporate Leads': '#1f1f22'
 };
 
 /** Returns a response for form leads, or null so your website handler runs as before. */
@@ -42,25 +46,43 @@ function handleGrowthLead_(e) {
       if (headers.indexOf(k) === -1) { headers.push(k); sh.getRange(1, headers.length).setValue(k); }
     });
     var first = String(row['Name'] || '').split(/\s+/)[0].replace(/"/g, '') || 'lead';
-    var values = headers.map(function (h) {
-      var v = row[h];
-      if (v === undefined || v === null) return '';
-      if (h === 'WhatsApp Follow-up') {
-        return /^https:\/\/wa\.me\//.test(v) ? '=HYPERLINK("' + String(v).replace(/"/g, '""') + '","💬 WhatsApp ' + first + '")' : '';
+
+    var targetRow = 0;
+    if (d.update_lead_id) {
+      var idCol = headers.indexOf('Lead ID') + 1;
+      if (idCol && sh.getLastRow() > 1) {
+        var found = sh.getRange(2, idCol, sh.getLastRow() - 1, 1).createTextFinder(String(d.update_lead_id)).matchEntireCell(true).findNext();
+        if (found) targetRow = found.getRow();
       }
-      if (typeof v === 'number') return v;
-      var s = String(v).slice(0, 2000);
-      return /^[=+\-@]/.test(s) ? "'" + s : s;                // stops formula injection
-    });
-    sh.appendRow(values);
-    var score = Number(row['Score']) || 0;
+    }
+
+    if (targetRow) {
+      // update only the cells we were given
+      Object.keys(row).forEach(function (k) {
+        sh.getRange(targetRow, headers.indexOf(k) + 1).setValue(growthCell_(k, row[k], first));
+      });
+    } else {
+      sh.appendRow(headers.map(function (h) { return growthCell_(h, row[h], first); }));
+      targetRow = sh.getLastRow();
+    }
+    var score = Number(row['Score']);
     var pCol = headers.indexOf('Priority') + 1;
-    if (pCol) sh.getRange(sh.getLastRow(), pCol)
-      .setBackground(score >= 70 ? '#fde2e1' : score >= 40 ? '#fff4d6' : '#eef2f7').setFontWeight('bold');
+    if (pCol && !isNaN(score)) sh.getRange(targetRow, pCol)
+      .setBackground(score >= 60 ? '#fde2e1' : score >= 35 ? '#fff4d6' : '#eef2f7').setFontWeight('bold');
   } finally {
     lock.releaseLock();
   }
   return growthOut_({ ok: true, tab: d.sheet_tab });
+}
+
+function growthCell_(header, v, first) {
+  if (v === undefined || v === null) return '';
+  if (header === 'WhatsApp Follow-up') {
+    return /^https:\/\/wa\.me\//.test(v) ? '=HYPERLINK("' + String(v).replace(/"/g, '""') + '","💬 WhatsApp ' + first + '")' : '';
+  }
+  if (typeof v === 'number') return v;
+  var s = String(v).slice(0, 2000);
+  return /^[=+\-@]/.test(s) ? "'" + s : s;                  // stops formula injection
 }
 
 function growthTab_(name, headers) {
@@ -74,7 +96,7 @@ function growthTab_(name, headers) {
     sh.setRowHeight(1, 34);
     sh.setTabColor(GROWTH_TABS[name]);
     sh.setColumnWidths(1, headers.length, 150);
-    var pain = headers.indexOf('Pain (in their words)') + 1;
+    var pain = headers.indexOf('Problem (in their words)') + 1;
     if (pain) sh.setColumnWidth(pain, 320).getRange(2, pain, 2000, 1).setWrap(true);
     var st = headers.indexOf('Status') + 1;
     if (st) sh.getRange(2, st, 2000, 1)
